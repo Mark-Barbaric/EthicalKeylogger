@@ -12,7 +12,7 @@ namespace Helper
 	inline std::tm localtime_xp(std::time_t time);
 
     template <class T>
-    std::string toSTDString(const T &);
+    std::wstring toSTDString(const T &);
 
     struct DateTime
     {
@@ -37,22 +37,22 @@ namespace Helper
 
         DateTime Now() const{return DateTime();}
 
-        std::string GetDateString() const{
-			return std::string(D < 10 ? "0" : "") + 
+        std::wstring GetDateString() const{
+			return std::wstring(D < 10 ? L"0" : L"") + 
 				toSTDString(D) + 
-				std::string(M < 10 ? ".0" : ".") + 
-				toSTDString(m) + "." + toSTDString(y);}
+				std::wstring(M < 10 ? L".0" : L".") + 
+				toSTDString(m) + L"." + toSTDString(y);}
 
-        std::string GetTimeString(const std::string &sep = ":") const
+        std::wstring GetTimeString(const std::wstring &sep = L":") const
         {
-            return std::string(H < 10 ? "0" : "") + toSTDString(H) + sep +
-                   std::string(M < 10 ? "0" : "") + toSTDString(M) + sep +
-                   std::string(S < 10 ? sep : "") + toSTDString(S);
+            return std::wstring(H < 10 ? L"0" : L"") + toSTDString(H) + sep +
+                   std::wstring(M < 10 ? L"0" :L"") + toSTDString(M) + sep +
+                   std::wstring(S < 10 ? sep : L"") + toSTDString(S);
         }
 
-        std::string GetDateTimeString(const std::string &sep = ":") const
+        std::wstring GetDateTimeString(const std::wstring &sep = L":") const
         {
-            return GetDateString() + " " + GetTimeString(sep);
+            return GetDateString() + L" " + GetTimeString(sep);
         }
     };
 
@@ -72,19 +72,19 @@ namespace Helper
 	}
 
     template <class T>
-    std::string toSTDString(const T &e)
+    std::wstring toSTDString(const T &e)
     {
-        std::ostringstream s;
+        std::wostringstream s;
         s << e;
         return s.str();
     }
 
     //writes to the log
-    void WriteAppLog(const std::string &s)
+    void WriteAppLog(const std::wstring &s)
     {
-        std::ofstream file("AppLog.txt", std::ios::app);
-        file << "[" << Helper::DateTime().GetDateTimeString() << "]" <<
-        "\n" << s << std::endl << "\n";
+        std::wofstream file(L"AppLog.txt", std::ios::app);
+        file << L"[" << Helper::DateTime().GetDateTimeString() << L"]" <<
+        L"\n" << s << std::endl << L"\n";
         file.close();
     }
 

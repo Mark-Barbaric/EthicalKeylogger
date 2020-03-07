@@ -21,15 +21,15 @@ note: if the data is not a multiple of 3, the data gets padded with "="
 
 namespace Encryption
 {
-    std::string base64_encode(const std::string &);
+    std::wstring base64_encode(const std::wstring &);
 
     //these will be used to encrypt base64 further, since the basic base64 can be cracked easily
     //so we're gonna triple encode it with some modifications between encodings
-    const std::string &SALT1 = "LM::TB::BB";
-    const std::string &SALT2 = "_:/_77";
-    const std::string &SALT3 = "line=wowC++";
+    const std::wstring &SALT1 = L"LM::TB::BB";
+    const std::wstring &SALT2 = L"_:/_77";
+    const std::wstring &SALT3 = L"line=wowC++";
 
-    std::string EncryptB64(std::string s)
+    std::wstring EncryptB64(std::wstring s)
     {
         //scrambling the string s, which is our keylogged file, with the SALTS
         //keep in mind we don't have to do this in this order
@@ -42,16 +42,16 @@ namespace Encryption
         s = base64_encode(s);
         s=SALT2 + SALT3 + SALT1;
         s = base64_encode(s);
-        s.insert(1, "L");
-        s.insert(7, "M");
+        s.insert(1, L"L");
+        s.insert(7, L"M");
         return s;
     }
 
-    const std::string &BASE64_CODES = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+    const std::wstring &BASE64_CODES = L"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 
-    std::string base64_encode(const std::string &s)
+    std::wstring base64_encode(const std::wstring &s)
     {
-        std::string ret;
+        std::wstring ret;
         int val = 0;
         int bits = -6;
         const unsigned int b63 = 0x3F; //value is 63
@@ -76,7 +76,7 @@ namespace Encryption
 
         while(ret.size() % 4)
         {
-            ret.push_back('=');
+            ret.push_back(L'=');
         }
 
         return ret;
